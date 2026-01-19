@@ -123,3 +123,29 @@ The Random Forest model outperformed the baseline and was selected for deploymen
 
 The trained pipeline is deployed using **FastAPI**, providing a REST API for volatility regime predictions.
 
+## Reproducibility — Quick start
+
+These steps reproduce training and the API locally.
+
+1. Create virtual environment and install dependencies:
+   - python -m venv venv
+   - source venv/bin/activate  # or venv\Scripts\activate on Windows
+   - pip install -r requirements.txt
+
+2. Download the data (the repository expects `TSLA_Stock.csv`):
+   - python download_data.py --start 2015-01-01 --end 2024-12-31 --out TSLA_Stock.csv
+
+3. Train the model (saves pipeline to `model/volatility_model.pkl` and metrics to `model/metrics.json`):
+   - python train.py --data TSLA_Stock.csv --model-dir model
+
+4. Run the API locally:
+   - uvicorn app:app --reload --host 0.0.0.0 --port 8000
+   - POST /predict with JSON matching the `MarketFeatures` schema in `app.py`.
+
+Notes:
+- If you prefer Docker:
+  - docker build -t tsla-vol-regime .
+  - docker run -p 8000:8000 tsla-vol-regime
+- The train script uses a time-aware split and a light randomized search to tune the RandomForest. Check `model/metrics.json` for evaluation results and the split dates used.
+
+
