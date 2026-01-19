@@ -1,7 +1,12 @@
-Requirement 
 fastapi
-uvicorn
+uvicorn[standard]
 pandas
 numpy
 scikit-learn
 joblib
+yfinance
+matplotlib
+seaborn
+xgboost
+lightgbm
+shap
