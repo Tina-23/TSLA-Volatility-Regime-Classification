@@ -13,9 +13,11 @@ import yfinance as yf
 import pandas as pd
 
 def download(symbol: str, start: str, end: str, out_path: str):
-    df = yf.download(symbol, start=start, end=end, progress=False)
+    df = yf.download(symbol, start=start, end=end, progress=False, auto_adjust=True)
     if df.empty:
         raise RuntimeError("No data downloaded. Check dates or network.")
+    if isinstance(df.columns, __import__('pandas').MultiIndex):
+        df.columns = df.columns.get_level_values(0)
     df = df.reset_index()[["Date", "Open", "High", "Low", "Close", "Volume"]]
     df.to_csv(out_path, index=False)
     print(f"Saved {len(df)} rows to {out_path}")
